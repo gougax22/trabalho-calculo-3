@@ -1,0 +1,56 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import sympy as sp
+
+# Definir variáveis simbólicas
+x, y = sp.symbols('x y')
+
+# Definir função h(x, y)
+h = x**2 + (1/4) * y**2 + 2
+
+# Calcular o valor de h no ponto Q
+ponto_Q = (1, 2)
+h_Q = h.subs({x: ponto_Q[0], y: ponto_Q[1]})
+
+# Derivadas parciais de h em relação a x e y
+dh_dx = sp.diff(h, x)
+dh_dy = sp.diff(h, y)
+
+# Substituir os valores do ponto nas derivadas parciais,calculo do gradiente no ponto Q
+dh_dx_valor = dh_dx.subs({x: ponto_Q[0], y: ponto_Q[1]})
+dh_dy_valor = dh_dy.subs({x: ponto_Q[0], y: ponto_Q[1]})
+
+# Gradiente no ponto Q,cria um array atraves do numpy para armazenar o gradiente no ponto Q
+gradiente = np.array([float(dh_dx_valor), float(dh_dy_valor)])
+
+# Configurações para o gráfico
+x = np.linspace(-2, 3, 100)
+y = np.linspace(-2, 3, 100)
+X, Y = np.meshgrid(x, y)  #cria uma grade retangular
+
+# Calcular Z = h(X, Y)
+H = X**2 + (1/4) * Y**2 + 2
+
+# Cria uma nova figura (fig) com dimensões 12x8 e define um gráfico tridimensional (3d), onde ax representa os eixos 3D
+fig = plt.figure(figsize=(10,6))
+ax = fig.add_subplot(111, projection='3d')
+
+# Superfície do gráfico
+ax.plot_surface(X, Y, H, cmap='viridis', alpha=0.7 )
+
+# Ponto Q
+ax.scatter(ponto_Q[0], ponto_Q[1], float(h_Q), color='red', s=100, label='Ponto Q(1, 2, h(1, 2))')
+
+# Vetor Gradiente no ponto Q
+ax.quiver(ponto_Q[0], ponto_Q[1], float(h_Q), gradiente[0], gradiente[1], 0, color='black', length=0.7, normalize=True, label='Gradiente ∇h')
+
+# Configurações do gráfico
+ax.set_xlabel('Eixo X')
+ax.set_ylabel('Eixo Y')
+ax.set_zlabel('h(x, y)')
+ax.set_title('Gráfico da função h e gradiente no ponto Q')
+ax.legend()
+ax.view_init(elev=30, azim=30)  # Definir o ângulo de visão
+
+# Mostrar o gráfico
+plt.show()
